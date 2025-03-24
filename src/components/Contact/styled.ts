@@ -13,7 +13,7 @@ export const ContactLinesStyled = styled.ul`
   flex-direction: column;
   gap: 10px;
   justify-content: center;
-  width: 200px;
+  width: 230px;
 `;
 
 export const ContactLineStyled = styled.li`

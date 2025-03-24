@@ -10,7 +10,7 @@ export interface IState {
   contacts: {
     items: Array<IContact>;
     loading: boolean;
-    error: AxiosError;
+    error: string;
   };
   filter: string;
 }

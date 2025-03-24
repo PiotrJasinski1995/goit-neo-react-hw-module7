@@ -17,32 +17,9 @@ import {
 import { addContact, deleteContact, fetchContacts } from "../redux/operations";
 import Loader from "./Loader/Loader.js";
 import { changeFilter } from "../redux/filterSlice.js";
+import ErrorComponent from "./ErrorComponent/ErrorComponent.js";
 
 function App() {
-  // const [contacts, setContacts] = useState((): Array<IContact> => {
-  //   const localContacts = window.localStorage.getItem("contacts");
-
-  //   if (localContacts !== null && localContacts.length > 0) {
-  //     return JSON.parse(localContacts);
-  //   }
-
-  //   return [];
-  // });
-
-  // const [filter, setFilter] = useState("");
-
-  // useEffect(() => {
-  //   if (contacts?.length > 0) {
-  //     localStorage.setItem("contacts", JSON.stringify(contacts));
-  //   } else {
-  //     const localContacts = localStorage.getItem("contacts");
-
-  //     if (localContacts !== null) {
-  //       localStorage.removeItem("contacts");
-  //     }
-  //   }
-  // }, [contacts]);
-
   const contacts = useAppSelector(selectContacts);
   const isLoading = useAppSelector(selectIsLoading);
   const error = useAppSelector(selectError);
@@ -66,26 +43,11 @@ function App() {
           phone,
         })
       );
-      // setContacts((previousContacts) => [
-      //   ...previousContacts,
-      //   {
-      //     id: nanoid(),
-      //     username,
-      //     phone,
-      //   },
-      // ]);
     }
   };
 
   const handleDeleteContact = (contactId: string) =>
-    // setContacts((previousContacts) =>
-    //   previousContacts.filter((contact) => contact.id !== contactId)
-    // );
     dispatch(deleteContact(contactId));
-
-  // const visibleContacts = contacts.filter((contact) =>
-  //   contact.username.toLowerCase().includes(filter.toLowerCase())
-  // );
 
   const handleFilter = (filter: string) => {
     dispatch(changeFilter(filter));
@@ -100,20 +62,24 @@ function App() {
         <ContactForm onHandleSubmit={handleFormSubmit} />
       </Section>
       <Section>
-        {error && <b>{error.message}</b>}
-        {contacts.length === 0 ? (
+        {error && <ErrorComponent message={error} />}
+        {isLoading && <Loader />}
+        {contacts.length === 0 && !isLoading && !error ? (
           <Notification message="No contacts in phonebook" />
         ) : (
           <>
-            <SearchBox filter={filter} onHandleFilter={handleFilter} />
-            {isLoading && <Loader />}
-            {visibleContacts.length === 0 ? (
-              <Notification message="No contacts matching given criteria"></Notification>
-            ) : (
-              <ContactList
-                contacts={visibleContacts}
-                onHandleDeleteContact={handleDeleteContact}
-              />
+            {!isLoading && !error && (
+              <>
+                <SearchBox filter={filter} onHandleFilter={handleFilter} />
+                {visibleContacts.length === 0 ? (
+                  <Notification message="No contacts matching given criteria"></Notification>
+                ) : (
+                  <ContactList
+                    contacts={visibleContacts}
+                    onHandleDeleteContact={handleDeleteContact}
+                  />
+                )}
+              </>
             )}
           </>
         )}

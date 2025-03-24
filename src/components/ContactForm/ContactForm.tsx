@@ -38,7 +38,6 @@ const ContactForm = ({ onHandleSubmit }: IContactForm) => {
     values: IFormValues,
     actions: FormikHelpers<IFormValues>
   ): void => {
-    console.log("values");
     onHandleSubmit(values.username, values.phone);
     actions.resetForm();
   };
